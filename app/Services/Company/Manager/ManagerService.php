@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Services\SuperAdmin;
+namespace App\Services\Company\Manager;
 
-use App\Models\Company;
+use App\Enum\Role\RoleEnum;
 use App\Models\CompanyEmployees;
-use App\Models\Content;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class SuperAdminService implements SuperAdminServiceInterface
+class ManagerService implements ManagerServiceInterface
 {
     public function create($request)
     {
@@ -37,7 +36,7 @@ class SuperAdminService implements SuperAdminServiceInterface
 
         $user = Auth::user();
 
-        if ($user->role !== "super_admin") {
+        if ($user->role !== "manager") {
             return response()->json([
                 'error'        => false,
                 'message'      => 'FORBIDDEN ACCESS',
@@ -49,29 +48,20 @@ class SuperAdminService implements SuperAdminServiceInterface
         DB::beginTransaction();
 
         try {
-            $managerData = [
-                'name'      => $request->manager_name,
-                'email'     => $request->manager_email,
-                'phone'     => $request->manager_phone ?? '',
-                'address'   => $request->manager_address ?? '',
+            $data = [
+                'name'      => $request->name,
+                'email'     => $request->email,
+                'phone'     => $request->phone,
+                'address'   => $request->address,
                 'role'      => "manager",
                 'password'  => Hash::make("Default123!"),
             ];
 
-            $dataManagerDb = User::create($managerData);
-
-            $data = [
-                'name'    => $request->name,
-                'email'   => $request->email,
-                'phone'   => $request->phone,
-                'user_id' => $dataManagerDb->id
-            ];
-
-            $dataDb = Company::create($data);
+            $dataDb = User::create($data);
 
             CompanyEmployees::create([
-                'user_id'       => $dataManagerDb->id,
-                'company_id'    => $dataDb->id
+                'user_id'       => $dataDb->id,
+                'company_id'    => Auth::user()->company->id
             ]);
 
             DB::commit();
@@ -80,8 +70,7 @@ class SuperAdminService implements SuperAdminServiceInterface
                 'error'        => false,
                 'message'      => 'OK',
                 'data'         => [
-                    $dataManagerDb,
-                    $dataDb
+                    $dataDb,
                 ],
                 'status'       => 201
             ], 201);
@@ -120,7 +109,7 @@ class SuperAdminService implements SuperAdminServiceInterface
 
         $user = Auth::user();
 
-        if ($user->role !== "super_admin") {
+        if ($user->role !== "manager") {
             return response()->json([
                 'error'        => false,
                 'message'      => 'FORBIDDEN ACCESS',
@@ -129,7 +118,7 @@ class SuperAdminService implements SuperAdminServiceInterface
             ], 403);
         }
 
-        $data = Company::find($id);
+        $data = User::with(['company', 'company_employee'])->find($id);
 
         if (!$data) {
             return response()->json([
@@ -172,7 +161,7 @@ class SuperAdminService implements SuperAdminServiceInterface
 
         $user = Auth::user();
 
-        if ($user->role !== "super_admin") {
+        if ($user->role !== "manager") {
             return response()->json([
                 'error'        => false,
                 'message'      => 'FORBIDDEN ACCESS',
@@ -181,9 +170,32 @@ class SuperAdminService implements SuperAdminServiceInterface
             ], 403);
         }
 
-        $limit = 10;
+        $limit = 2;
 
-        $data = Company::orderBy('id', 'asc')->paginate($limit);
+        $query = User::with(['company', 'company_employee'])
+            ->whereIn('role', ['manager', 'employee']);
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('name', 'ilike', '%' . $request->search . '%');
+        }
+
+        $allowedSortFields = ['id', 'email', 'name', 'phone', 'address', 'role'];
+
+        if ($request->has('sortBy') && !empty($request->sortBy)) {
+            if (in_array($request->sortBy, $allowedSortFields)) {
+                $sortOrder = $request->has('sortOrder') && in_array($request->sortOrder, ['asc', 'desc']) ? $request->sortOrder : 'asc';
+                $query->orderBy($request->sortBy, $sortOrder);
+            } else {
+                return response()->json([
+                    'error'     => true,
+                    'message'   => 'Invalid sort field. Allowed sort fields are: ' . implode(', ', $allowedSortFields),
+                    'data'      => null,
+                    'status'    => 400
+                ], 400);
+            }
+        }
+
+        $data = $query->paginate($limit);
 
         return response()->json([
             'error'        => false,
@@ -217,7 +229,7 @@ class SuperAdminService implements SuperAdminServiceInterface
 
         $user = Auth::user();
 
-        if ($user->role !== "super_admin") {
+        if ($user->role !== "manager") {
             return response()->json([
                 'error'        => false,
                 'message'      => 'FORBIDDEN ACCESS',
@@ -226,7 +238,16 @@ class SuperAdminService implements SuperAdminServiceInterface
             ], 403);
         }
 
-        $dataDb = Company::find($id);
+        if (!$id) {
+            return response()->json([
+                'error'        => true,
+                'message'      => 'MISSING ID',
+                'data'         => null,
+                'status'       => 400
+            ], 400);
+        }
+
+        $dataDb = User::find($id);
 
         if (!$dataDb) {
             return response()->json([
@@ -235,6 +256,17 @@ class SuperAdminService implements SuperAdminServiceInterface
                 'data'         => null,
                 'status'       => 200
             ], 200);
+        }
+
+        if ($dataDb->role === RoleEnum::MANAGER) {
+            if ($user->id !== $id) {
+                return response()->json([
+                    'error'        => false,
+                    'message'      => 'YOU CAN ONLY UPDATE YOUR OWN DATA',
+                    'data'         => null,
+                    'status'       => 403
+                ], 403);
+            }
         }
 
         DB::beginTransaction();
@@ -291,7 +323,7 @@ class SuperAdminService implements SuperAdminServiceInterface
 
         $user = Auth::user();
 
-        if ($user->role !== "super_admin") {
+        if ($user->role !== "manager") {
             return response()->json([
                 'error'        => false,
                 'message'      => 'FORBIDDEN ACCESS',
@@ -300,7 +332,7 @@ class SuperAdminService implements SuperAdminServiceInterface
             ], 403);
         }
 
-        $dataDb = Company::find($id);
+        $dataDb = User::find($id);
 
         if (!$dataDb) {
             return response()->json([

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\ApiAuthController;
+use App\Http\Controllers\Api\Company\Manager\ApiManagerController;
 use App\Http\Controllers\Api\SuperAdmin\ApiSuperAdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,22 @@ Route::group([
         Route::put('/{id}', [ApiSuperAdminController::class, 'update'])
             ->name('admin.update');
         Route::delete('/{id}', [ApiSuperAdminController::class, 'delete'])
+            ->name('admin.delete');
+    });
+
+    // Manager
+    Route::group([
+        'prefix'     => '/manager',
+    ], function () {
+        Route::post('/', [ApiManagerController::class, 'create'])
+            ->name('admin.create');
+        Route::get('/{id}', [ApiManagerController::class, 'getById'])
+            ->name('admin.getOne');
+        Route::get('/', [ApiManagerController::class, 'getAll'])
+            ->name('admin.get');
+        Route::put('/{id}', [ApiManagerController::class, 'update'])
+            ->name('admin.update');
+        Route::delete('/{id}', [ApiManagerController::class, 'delete'])
             ->name('admin.delete');
     });
 });

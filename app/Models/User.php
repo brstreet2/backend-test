@@ -25,7 +25,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'phone',
         'address',
-        'refresh_token',
+        'access_token',
         'role'
     ];
 
@@ -38,6 +38,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $hidden = [
         'password',
+        'access_token'
     ];
 
     /**
@@ -74,6 +75,11 @@ class User extends Authenticatable implements JWTSubject
 
     public function company()
     {
-        $this->hasOne(Company::class, 'user_id', 'id');
+        return $this->hasOne(Company::class, 'user_id', 'id');
+    }
+
+    public function company_employee()
+    {
+        return $this->hasOne(CompanyEmployees::class, 'user_id', 'id');
     }
 }
