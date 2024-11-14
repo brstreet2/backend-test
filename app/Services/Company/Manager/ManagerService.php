@@ -53,7 +53,7 @@ class ManagerService implements ManagerServiceInterface
                 'email'     => $request->email,
                 'phone'     => $request->phone,
                 'address'   => $request->address,
-                'role'      => "manager",
+                'role'      => $request->role,
                 'password'  => Hash::make("Default123!"),
             ];
 

@@ -32,7 +32,7 @@ class AuthService implements AuthServiceInterface
             return response()->json([
                 'error'        => false,
                 'message'      => 'OK',
-                'data'         => $userDb,
+                'data'         => ["user" => $userDb, "token" => $token],
                 'status'       => 200
             ], 200);
         } catch (\Exception $e) {

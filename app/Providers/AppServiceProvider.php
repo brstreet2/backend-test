@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Services\Auth\AuthService;
 use App\Services\Auth\AuthServiceInterface;
+use App\Services\Company\Employee\EmployeeService;
+use App\Services\Company\Employee\EmployeeServiceInterface;
 use App\Services\Company\Manager\ManagerService;
 use App\Services\Company\Manager\ManagerServiceInterface;
 use App\Services\SuperAdmin\SuperAdminService;
@@ -30,6 +32,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             ManagerServiceInterface::class,
             ManagerService::class
+        );
+
+        $this->app->bind(
+            EmployeeServiceInterface::class,
+            EmployeeService::class
         );
     }
 

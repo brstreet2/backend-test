@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\ApiAuthController;
+use App\Http\Controllers\Api\Company\Employee\ApiEmployeeController;
 use App\Http\Controllers\Api\Company\Manager\ApiManagerController;
 use App\Http\Controllers\Api\SuperAdmin\ApiSuperAdminController;
 use Illuminate\Http\Request;
@@ -42,14 +43,24 @@ Route::group([
         'prefix'     => '/manager',
     ], function () {
         Route::post('/', [ApiManagerController::class, 'create'])
-            ->name('admin.create');
+            ->name('manager.create');
         Route::get('/{id}', [ApiManagerController::class, 'getById'])
-            ->name('admin.getOne');
+            ->name('manager.getOne');
         Route::get('/', [ApiManagerController::class, 'getAll'])
-            ->name('admin.get');
+            ->name('manager.get');
         Route::put('/{id}', [ApiManagerController::class, 'update'])
-            ->name('admin.update');
+            ->name('manager.update');
         Route::delete('/{id}', [ApiManagerController::class, 'delete'])
-            ->name('admin.delete');
+            ->name('manager.delete');
+    });
+
+    // Employee
+    Route::group([
+        'prefix'     => '/employee',
+    ], function () {
+        Route::get('/{id}', [ApiEmployeeController::class, 'getById'])
+            ->name('employee.getOne');
+        Route::get('/', [ApiEmployeeController::class, 'getAll'])
+            ->name('employee.get');
     });
 });
