@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->default('');
             $table->string('email')->unique();
             $table->string('phone')->default('');
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });
