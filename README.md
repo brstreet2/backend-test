@@ -1,66 +1,123 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Backend Test
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is a Laravel, web-based project, dedicated to PT. Global Inovasi Gemilang, this project should serve as my final results for the backend test.
 
-## About Laravel
+Please refer to [Postman Collection](https://blue-flare-865064.postman.co/workspace/Team-Workspace~22f02c25-ec65-41d4-88d0-063c448472ec/collection/21527756-dbfddcfa-217b-4c37-87b7-a53f1deda5a7?action=share&creator=21527756) for the complete API documentation.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Installation:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Clone from Github
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+    git clone https://github.com/brstreet2/backend-test.git
 
-## Learning Laravel
+After you're done cloning, navigate to the project root directory, and install the required dependencies and packages.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Note: You must be using PHP 8.3 or higher
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+    composer install
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Once you've installed the necessary dependencies and packages, please set your JWT_SECRET by using the command:
 
-## Laravel Sponsors
+    php artisan:secret
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+It will automatically generate a secret key for JWT and generate default JWT hashing algorithm in your env, so by now your ENV should look like this:
 
-### Premium Partners
+    APP_NAME=Laravel
+    APP_ENV=local
+    APP_KEY=base64:QbRdGQMRiqRZKGilw7pgoDm9lx8SSE+3ugW+oFIUr34=
+    APP_DEBUG=true
+    APP_TIMEZONE=UTC
+    APP_URL=http://localhost
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+    APP_LOCALE=en
+    APP_FALLBACK_LOCALE=en
+    APP_FAKER_LOCALE=en_US
 
-## Contributing
+    APP_MAINTENANCE_DRIVER=file
+    # APP_MAINTENANCE_STORE=database
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    PHP_CLI_SERVER_WORKERS=4
 
-## Code of Conduct
+    BCRYPT_ROUNDS=12
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    LOG_CHANNEL=stack
+    LOG_STACK=single
+    LOG_DEPRECATIONS_CHANNEL=null
+    LOG_LEVEL=debug
 
-## Security Vulnerabilities
+    DB_CONNECTION=pgsql
+    DB_HOST=127.0.0.1
+    DB_PORT=5432
+    DB_DATABASE=crm_company
+    DB_USERNAME=postgres
+    DB_PASSWORD=
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    SESSION_DRIVER=database
+    SESSION_LIFETIME=120
+    SESSION_ENCRYPT=false
+    SESSION_PATH=/
+    SESSION_DOMAIN=null
 
-## License
+    BROADCAST_CONNECTION=log
+    FILESYSTEM_DISK=local
+    QUEUE_CONNECTION=database
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    CACHE_STORE=database
+    CACHE_PREFIX=
+
+    MEMCACHED_HOST=127.0.0.1
+
+    REDIS_CLIENT=phpredis
+    REDIS_HOST=127.0.0.1
+    REDIS_PASSWORD=null
+    REDIS_PORT=6379
+
+    MAIL_MAILER=log
+    MAIL_HOST=127.0.0.1
+    MAIL_PORT=2525
+    MAIL_USERNAME=null
+    MAIL_PASSWORD=null
+    MAIL_ENCRYPTION=null
+    MAIL_FROM_ADDRESS="hello@example.com"
+    MAIL_FROM_NAME="${APP_NAME}"
+
+    AWS_ACCESS_KEY_ID=
+    AWS_SECRET_ACCESS_KEY=
+    AWS_DEFAULT_REGION=us-east-1
+    AWS_BUCKET=
+    AWS_USE_PATH_STYLE_ENDPOINT=false
+
+    VITE_APP_NAME="${APP_NAME}"
+
+    JWT_SECRET=df8bdd0cc4e84e694f1e369011775340c28e3cfebbdff1ea63e429eab42423ff583c316412d14d4a4486e5cf4c9ec3b20b93b6b2dc47017fe5c2d626e6233423d8ac7d9ce7359adbcf5f361a4383ee582a7567345e09ebab19cd9b4468d6c97bac2dd789a5cc322a9eece0f526ff13535fb2896079de98c77e5e188b8921bfc09d8608d08b054849248cba66f951b1deb06613eae173a561f6f72754e55339e8f7ff9162dc580d4ceed30fd6cb6f4c809785258f4e0f66655856b66a3f479123e3d973817a5fb9c2eefc52b5db672b70505bd25f1472ef0c99fb4e674ae111ac0058f2e90a005a8eed5f3cf414c12c963a57e30b556c6a8200b6487404e851f2
+
+    JWT_ALGO=HS256
+
+    JWT_REFRESH_TTL=43200
+
+And last, please set and do your own database connection, in this project, I am using PostgreSQL.
+
+## Database Migrations & Seeder
+
+Run the following command to create your tables on the database, and create a super admin user.
+
+    php artisan migrate
+    php artisan db:seed
+
+This is the email & password used to login as super admin
+
+    email: super@admin.com
+    password: Password123!
+
+## Features
+
+-   Role based system, with 3 roles available (super_admin, manager, employee).
+-   Dynamic employees for companies.
+-   Generate database tables using migration.
+-   Generate a root admin data using seeder.
+
+Checkout the [Postman Collection](https://blue-flare-865064.postman.co/workspace/Team-Workspace~22f02c25-ec65-41d4-88d0-063c448472ec/collection/21527756-dbfddcfa-217b-4c37-87b7-a53f1deda5a7?action=share&creator=21527756) for the complete API Docs.
+
+## Third party library / packages
+
+-   php-open-source-saver/jwt-auth ^2.7 : JWT library for Laravel / PHP.
